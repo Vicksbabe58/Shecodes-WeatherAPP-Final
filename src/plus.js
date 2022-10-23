@@ -71,6 +71,7 @@ function displayTemperature(response) {
     `http://openweathermap.org/img/wn/${newIcon}@2x.png`
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
+  celsiusTemp = response.data.main.temp;
 }
 
 function search(city) {
@@ -78,7 +79,6 @@ function search(city) {
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayTemperature);
 }
-search("Awka");
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -88,3 +88,34 @@ function handleSubmit(event) {
 
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
+
+function displayFahrenheitTemp(event) {
+  event.preventDefault();
+  let fahrenheitTemp = Math.round(celsiusTemp * 9) / 5 + 32;
+  // remove the class of celsius link
+  celsiusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
+
+  let temperatureElement = (document.querySelector("#temperature").innerHTML =
+    Math.round(fahrenheitTemp));
+}
+
+function displayCelsiusTemp(event) {
+  event.preventDefault();
+  // add the class of celsius link
+  celsiusLink.classList.add("active");
+  fahrenheitLink.classList.remove("active");
+
+  let temperatureElement = (document.querySelector("#temperature").innerHTML =
+    Math.round(celsiusTemp));
+}
+
+let fahrenheitLink = document.querySelector("#fahrenheit-link");
+fahrenheitLink.addEventListener("click", displayFahrenheitTemp);
+
+let celsiusLink = document.querySelector("#celsius-link");
+celsiusLink.addEventListener("click", displayCelsiusTemp);
+
+let celsiusTemp = null;
+
+search("Awka");
