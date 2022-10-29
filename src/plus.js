@@ -44,7 +44,8 @@ function formatDate(timestamp) {
   return `${newDate}  ${newTime}`;
 }
 
-function displayForeCast() {
+function displayForecast(response) {
+  console.log(response.data.daily);
   let forecastElement = document.querySelector("#forecast");
 
   let forecastHTML = `<div class="row">`;
@@ -72,6 +73,15 @@ function displayForeCast() {
 
   forecastHTML = forecastHTML + `</div> `;
   forecastElement.innerHTML = forecastHTML;
+}
+
+function getForecast(coordinates) {
+  console.log(coordinates);
+  //let apiKey = "6ca604c95283a09c75d6e1f82b1cae7e";
+  let apiKey = "c1d20ef03fedeaf4c6fca40d08bodtba";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${coordinates.lon}&lat=${coordinates.lat}&key=${apiKey}&units=metric`;
+  // console.log(apiUrl);
+  axios.get(apiUrl).then(displayForecast);
 }
 
 function displayTemperature(response) {
@@ -102,12 +112,17 @@ function displayTemperature(response) {
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
   celsiusTemp = response.data.main.temp;
+
+  getForecast(response.data.coord);
 }
 
 function search(city) {
   let apiKey = "6ca604c95283a09c75d6e1f82b1cae7e";
+  // let apiKey = "c1d20ef03fedeaf4c6fca40d08bodtba";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+  // let apiUrl = `https:api/shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayTemperature);
+  console.log(apiUrl);
 }
 
 function handleSubmit(event) {
@@ -147,7 +162,5 @@ let celsiusLink = document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click", displayCelsiusTemp);
 
 let celsiusTemp = null;
-
-displayForeCast();
 
 search("Awka");
