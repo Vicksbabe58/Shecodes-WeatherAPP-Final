@@ -44,6 +44,36 @@ function formatDate(timestamp) {
   return `${newDate}  ${newTime}`;
 }
 
+function displayForeCast() {
+  let forecastElement = document.querySelector("#forecast");
+
+  let forecastHTML = `<div class="row">`;
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  days.forEach((day) => {
+    forecastHTML =
+      forecastHTML +
+      ` 
+      
+              <div class="col-2">
+                <div class="weather-forecast-date">${day}</div>
+                <img
+                  src="http://openweathermap.org/img/wn/04d@2x.png"
+                  alt=""
+                  width="42"
+                />
+                <div class="weather-forecast-temps">
+                  <span class="weather-forecast-temp-max">18°</span>
+                  <span class="weather-forecast-temp-min">12°</span>
+                </div>
+              </div>
+
+    `;
+  });
+
+  forecastHTML = forecastHTML + `</div> `;
+  forecastElement.innerHTML = forecastHTML;
+}
+
 function displayTemperature(response) {
   console.log(response.data);
   let cityElement = (document.querySelector("#city").innerHTML =
@@ -117,5 +147,7 @@ let celsiusLink = document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click", displayCelsiusTemp);
 
 let celsiusTemp = null;
+
+displayForeCast();
 
 search("Awka");
