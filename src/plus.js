@@ -20,6 +20,7 @@ function formatDate(timestamp) {
   let forDate = date.getDate();
   let fullYear = date.getFullYear();
   let hours = date.getHours();
+  let am_pm = hours > 12 ? "PM" : "AM";
   if (hours < 10) {
     hours = `0${hours}`;
   }
@@ -41,7 +42,7 @@ function formatDate(timestamp) {
   let day = days[date.getDay()];
   let newDate = `${day}, ${month} ${forDate} ${fullYear} `;
   let newTime = `${hours}:${minutes}`;
-  return `${newDate}  ${newTime}`;
+  return `${newDate} ${newTime}${am_pm}`;
 }
 
 function forecastDate(timestamp) {
@@ -105,8 +106,93 @@ function getForecast(coordinates) {
   axios.get(apiUrl).then(displayForecast);
 }
 
+//background setting
+// function setBackgroundColor(response) {
+//  let iconCondition = response;
+//  let background = document.querySelector("#backgound");
+// if (
+//   iconCondition === "clear-sky-day" ||
+//   iconCondition === "scattered-clouds-day" ||
+// iconCondition === "few-clouds-day" ||
+//   iconCondition === "broken-clouds-day" ||
+//    iconCondition === "rain-day" ||
+//   iconCondition === "shower-rain-day" ||
+//   iconCondition === "thunderstorm-day " ||
+//  iconCondition === "snow-day" ||
+//  iconCondition === "mist-day"
+// ) {
+//   background.classList.add(".day");
+//    background.classList.remove(".night");
+// } else {
+//   background.classList.add(".night");
+//   background.classList.remove(".day");
+// }
+//  }
+// searched city
+function setQuote(response) {
+  console.log(response);
+  let iconCondition = response;
+  let quote = document.querySelector("#quotes");
+  switch (iconCondition) {
+    case "clear-sky-day":
+      quote.innerHTML = `“Keep your face to the sun and you will never see the shadows.”`;
+      break;
+    case "clear-night-sky":
+      quote.innerHTML = `“Look at the stars. See their beauty. And in that beauty, see yourself.”`;
+      break;
+    case "few-clouds-day":
+      quote.innerHTML = `“A cloudless plain blue sky is like a flowerless garden.”`;
+      break;
+    case "few-clouds-night":
+      quote.innerHTML = `“The night sky is a miracle of infinitude.”`;
+      break;
+    case "scattered-clouds-day":
+      quote.innerHTML = `“Even when clouds grow thick, the sun still pours its light earthward.”`;
+      break;
+    case "scattered-clouds-night":
+      quote.innerHTML = `“When the sky is totally covered by the dark clouds, be strong enough to see the bright stars beyond them.”`;
+      break;
+    case "broken-clouds-day":
+      quote.innerHTML = `“Clouds can never hide the sun forever, so don't complain about clouds but never forget to welcome the sun.”`;
+      break;
+    case "broken-clouds-night":
+      quote.innerHTML = `“Above the cloud with its shadow is the star with its light.”`;
+      break;
+    case "shower-rain-day":
+      quote.innerHTML = `“Rain is grace; rain is the sky descending to the earth; without rain, there would be no life.”`;
+      break;
+    case "shower-rain-night":
+      quote.innerHTML = `“The rain will stop, the night will end, the hurt will fade. Hope is never so lost that it can’t be found.”`;
+      break;
+    case "rain-day":
+      quote.innerHTML = `“The nicest thing about the rain is that it always stops. Eventually.”`;
+      break;
+    case "rain-night":
+      quote.innerHTML = `“Let the rain beat upon your head with silver liquid drops. It plays a little sleep song on our roof at night...”`;
+      break;
+    case "thunderstorm-day":
+      quote.innerHTML = `“Dont wait for the storms of your life to pass. Learn to dance in the rain.”`;
+      break;
+    case "thunderstorm-night":
+      quote.innerHTML = `“The more violent the storm, the quicker it passes.”`;
+      break;
+    case "snow-day":
+      quote.innerHTML = `“When it snows, you have two choices: shovel or make snow angels.”`;
+      break;
+    case "snow-night":
+      quote.innerHTML = `“When snow falls, nature listens...”`;
+      break;
+    case "mist-day":
+      quote.innerHTML = `“Don't be afraid to go into the mist. Be excited because you don't know where you will end up.”`;
+      break;
+    case "mist-night":
+      quote.innerHTML = `“Beyond the mist lies clarity.”`;
+      break;
+  }
+}
+
 function displayTemperature(response) {
-  // console.log(response.data);
+  console.log(response.data);
 
   document.querySelector("#city").innerHTML = response.data.city;
 
@@ -134,6 +220,7 @@ function displayTemperature(response) {
     response.data.time * 1000
   );
   let newIcon = response.data.condition.icon_url;
+  let iconCondition = response.data.condition.icon;
   let iconElement = document.querySelector("#icon");
   iconElement.setAttribute("src", newIcon);
   iconElement.setAttribute("alt", response.data.condition.description);
@@ -141,6 +228,8 @@ function displayTemperature(response) {
   celsiusTemp = response.data.temperature.current;
 
   getForecast(response.data.coordinates);
+ // setBackgroundColor(iconCondition);
+  setQuote(iconCondition);
 }
 function getCurrentLocation(event) {
   event.preventDefault();
